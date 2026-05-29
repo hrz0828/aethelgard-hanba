@@ -54,6 +54,10 @@ export function createHud(language: Language): HTMLElement {
   element.className = "hud";
   element.setAttribute("aria-label", text.runStatusAria);
   element.innerHTML = `
+    <button class="hud-toggle" type="button" aria-expanded="false">
+      <span data-hud-toggle-label>${text.runStatusAria}</span>
+      <strong data-hud-toggle-time>0:00</strong>
+    </button>
     <div class="hud-row">
       <span data-time-label>${text.timeLabel}</span>
       <strong data-time>0:00</strong>
@@ -62,49 +66,49 @@ export function createHud(language: Language): HTMLElement {
       <span data-kills-label>${text.killsLabel}</span>
       <span data-kills>0</span>
     </div>
-    <div class="hud-row hud-row-secondary">
+    <div class="hud-row hud-row-secondary hud-collapsible">
       <span data-zone-label>${text.zoneLabel}</span>
       <strong data-zone>${text.zones.hub}</strong>
       <span data-event-label>${text.eventLabel}</span>
       <span data-event>${text.eventNone}</span>
     </div>
-    <div class="hud-row hud-row-secondary">
+    <div class="hud-row hud-row-secondary hud-collapsible">
       <span data-map-poi-label>${text.mapPoiLabel}</span>
       <strong data-map-poi-count>0</strong>
       <span data-map-poi-hint>${text.eventNone}</span>
       <span data-map-poi-name>${text.eventNone}</span>
     </div>
-    <div class="hud-row hud-row-secondary">
+    <div class="hud-row hud-row-secondary hud-collapsible">
       <span data-weapon-title>${text.weaponHudTitle}</span>
       <strong data-weapon>${text.weaponClasses["pulse-rifle"].name}</strong>
       <span data-weapon-active-label>${text.weaponHudActiveLabel}</span>
       <span data-weapon-form>${text.weaponForms["pulse-rifle"].single!.name}</span>
     </div>
-    <div class="hud-row hud-row-secondary">
+    <div class="hud-row hud-row-secondary hud-collapsible">
       <span data-weapon-form-label>${text.weaponHudFormLabel}</span>
       <strong data-weapon-form-name>${text.weaponForms["pulse-rifle"].single!.name}</strong>
       <span data-weapon-history-label>${text.weaponHudEvolutionLabel}</span>
       <strong data-weapon-history>T0</strong>
     </div>
-    <div class="hud-row hud-row-secondary">
+    <div class="hud-row hud-row-secondary hud-collapsible">
       <span data-dodge-label>${text.dodgeLabel}</span>
       <strong data-dodge-type>${text.dodgeTypes.roll}</strong>
       <span data-dodge-state>${text.dodgeReadyLabel}</span>
       <strong data-dodge-cooldown>0.0s</strong>
     </div>
-    <div class="meter dodge" aria-label="Dodge Cooldown">
+    <div class="meter dodge hud-collapsible" aria-label="Dodge Cooldown">
       <span class="meter-label" data-dodge-meter-label>${text.dodgeCooldownLabel}</span>
       <span data-dodge-meter></span>
     </div>
-    <div class="meter health" aria-label="Health">
+    <div class="meter health hud-collapsible" aria-label="Health">
       <span class="meter-label" data-health-label>${text.healthLabel}</span>
       <span data-health></span>
     </div>
-    <div class="meter experience" aria-label="Experience">
+    <div class="meter experience hud-collapsible" aria-label="Experience">
       <span class="meter-label" data-experience-label>${text.experienceLabel}</span>
       <span data-experience></span>
     </div>
-    <div class="boss-bar" hidden>
+    <div class="boss-bar hud-collapsible" hidden>
       <span class="boss-bar-label" data-boss-label>${text.bossLabel}</span>
       <strong data-boss-name>${text.bossName}</strong>
       <div class="meter boss-meter" aria-label="Boss Health">
@@ -113,11 +117,20 @@ export function createHud(language: Language): HTMLElement {
     </div>
   `;
 
+  const toggle = element.querySelector<HTMLButtonElement>(".hud-toggle")!;
+  toggle.addEventListener("click", () => {
+    const expanded = !element.classList.contains("hud-expanded");
+    element.classList.toggle("hud-expanded", expanded);
+    toggle.setAttribute("aria-expanded", String(expanded));
+  });
+
   return element;
 }
 
 export function renderHud(root: HTMLElement, state: RunState, language: Language): void {
   const text = getUiText(language);
+  root.querySelector<HTMLElement>("[data-hud-toggle-label]")!.textContent = text.runStatusAria;
+  root.querySelector<HTMLElement>("[data-hud-toggle-time]")!.textContent = formatTime(state.timeMs);
   root.querySelector<HTMLElement>("[data-time]")!.textContent = formatTime(state.timeMs);
   root.querySelector<HTMLElement>("[data-time-label]")!.textContent = text.timeLabel;
   root.querySelector<HTMLElement>("[data-level-label]")!.textContent = text.levelLabel;

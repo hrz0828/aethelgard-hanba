@@ -1,6 +1,14 @@
 import type { MovementInput } from "../game/input";
+import type { RunState } from "../game/types";
 
 const MAX_DISTANCE = 54;
+const DODGE_ICONS: Record<RunState["player"]["dodge"]["type"], string> = {
+  blink: "✦",
+  roll: "↻",
+  jump: "⇧",
+  dash: "➜",
+  "shield-step": "◆"
+};
 
 export function createJoystick(onMove: (input: MovementInput) => void, onDodge: () => void): HTMLElement {
   const element = document.createElement("div");
@@ -9,7 +17,9 @@ export function createJoystick(onMove: (input: MovementInput) => void, onDodge: 
     <div class="joystick-track">
       <div class="joystick-thumb"></div>
     </div>
-    <button type="button" class="joystick-dodge" aria-label="Dodge">⤴</button>
+    <button type="button" class="joystick-dodge" aria-label="Dodge">
+      <span class="joystick-dodge-icon" data-dodge-icon>${DODGE_ICONS.roll}</span>
+    </button>
   `;
 
   const thumb = element.querySelector<HTMLElement>(".joystick-thumb")!;
@@ -59,4 +69,14 @@ export function createJoystick(onMove: (input: MovementInput) => void, onDodge: 
   });
 
   return element;
+}
+
+export function renderJoystickDodgeIcon(root: HTMLElement, state: RunState): void {
+  const icon = root.querySelector<HTMLElement>("[data-dodge-icon]");
+
+  if (!icon) {
+    return;
+  }
+
+  icon.textContent = DODGE_ICONS[state.player.dodge.type];
 }

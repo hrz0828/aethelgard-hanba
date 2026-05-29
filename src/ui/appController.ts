@@ -6,7 +6,7 @@ import { SELECTED_CHARACTER_KEY } from "../game/characters";
 import type { MovementInput } from "../game/input";
 import type { RunState } from "../game/types";
 import { createHud, renderHud } from "./hud";
-import { createJoystick } from "./joystick";
+import { createJoystick, renderJoystickDodgeIcon } from "./joystick";
 import { getUiText, type Language } from "./locale";
 import { getRosterUnlockCost } from "./roster";
 import { showResult, showStartMenu, type ResultSummary } from "./menu";
@@ -21,6 +21,7 @@ export class GameUiController {
   private language: Language;
   private metaSave = loadMetaSave();
   private hud: HTMLElement | undefined;
+  private joystick: HTMLElement | undefined;
   private upgradeOverlay: HTMLElement | undefined;
   private upgradeOpen = false;
   private currentMode: "menu" | "game" | "result" = "menu";
@@ -89,6 +90,7 @@ export class GameUiController {
     this.upgradeOverlay?.remove();
     this.upgradeOverlay = undefined;
     this.hud = undefined;
+    this.joystick = undefined;
     this.joystickInput = { x: 0, y: 0, dodgePressed: false };
     this.game.registry.set("joystick", this.joystickInput);
   }
@@ -132,6 +134,9 @@ export class GameUiController {
     }
 
     renderHud(this.hud, this.currentRunState, this.language);
+    if (this.joystick) {
+      renderJoystickDodgeIcon(this.joystick, this.currentRunState);
+    }
   }
 
   private renderCurrentUpgradeOverlay(): void {
@@ -211,18 +216,17 @@ export class GameUiController {
     this.upgradeOverlay = undefined;
     this.hud = createHud(this.language);
     this.uiContent.append(this.hud);
-    this.uiContent.append(
-      createJoystick(
-        (input: MovementInput) => {
-          this.joystickInput = { x: input.x, y: input.y, dodgePressed: false };
-          this.game.registry.set("joystick", this.joystickInput);
-        },
-        () => {
-          this.joystickInput = { ...this.joystickInput, dodgePressed: true };
-          this.game.registry.set("joystick", this.joystickInput);
-        }
-      )
+    this.joystick = createJoystick(
+      (input: MovementInput) => {
+        this.joystickInput = { x: input.x, y: input.y, dodgePressed: false };
+        this.game.registry.set("joystick", this.joystickInput);
+      },
+      () => {
+        this.joystickInput = { ...this.joystickInput, dodgePressed: true };
+        this.game.registry.set("joystick", this.joystickInput);
+      }
     );
+    this.uiContent.append(this.joystick);
     this.joystickInput = { x: 0, y: 0, dodgePressed: false };
     this.game.registry.set("joystick", this.joystickInput);
   }
