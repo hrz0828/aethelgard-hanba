@@ -20,6 +20,11 @@ export interface StartMenuCallbacks {
   onUnlockCharacter: (characterId: CharacterId) => void;
 }
 
+export interface ResultCallbacks {
+  onRestart: () => void;
+  onMainMenu: () => void;
+}
+
 function formatTime(timeMs: number): string {
   const minutes = Math.floor(timeMs / 60000);
   const seconds = Math.floor((timeMs % 60000) / 1000)
@@ -54,7 +59,7 @@ export function showStartMenu(
   root.querySelector<HTMLButtonElement>("[data-start]")!.addEventListener("click", callbacks.onStart);
 }
 
-export function showResult(root: HTMLElement, language: Language, result: ResultSummary, onRestart: () => void): void {
+export function showResult(root: HTMLElement, language: Language, result: ResultSummary, callbacks: ResultCallbacks): void {
   const text = getUiText(language);
   root.innerHTML = `
     <main class="menu-shell">
@@ -75,9 +80,13 @@ export function showResult(root: HTMLElement, language: Language, result: Result
           <strong data-result-unlocked-characters>${result.unlockedCharacterCount}</strong>
         </div>
       </div>
-      <button class="primary-button" data-restart type="button">${text.restartButton}</button>
+      <div class="result-actions">
+        <button class="primary-button" data-restart type="button">${text.restartButton}</button>
+        <button class="secondary-button" data-main-menu type="button">${text.mainMenuButton}</button>
+      </div>
     </main>
   `;
 
-  root.querySelector<HTMLButtonElement>("[data-restart]")!.addEventListener("click", onRestart);
+  root.querySelector<HTMLButtonElement>("[data-restart]")!.addEventListener("click", callbacks.onRestart);
+  root.querySelector<HTMLButtonElement>("[data-main-menu]")!.addEventListener("click", callbacks.onMainMenu);
 }

@@ -1,5 +1,6 @@
 import type { MovementInput } from "../game/input";
 import type { RunState } from "../game/types";
+import { getDodgeSkillButtonState } from "./dodge";
 
 const MAX_DISTANCE = 54;
 const DODGE_ICONS: Record<RunState["player"]["dodge"]["type"], string> = {
@@ -19,6 +20,7 @@ export function createJoystick(onMove: (input: MovementInput) => void, onDodge: 
     </div>
     <button type="button" class="joystick-dodge" aria-label="Dodge">
       <span class="joystick-dodge-icon" data-dodge-icon>${DODGE_ICONS.roll}</span>
+      <span class="joystick-dodge-cooldown" data-dodge-cooldown></span>
     </button>
   `;
 
@@ -73,10 +75,17 @@ export function createJoystick(onMove: (input: MovementInput) => void, onDodge: 
 
 export function renderJoystickDodgeIcon(root: HTMLElement, state: RunState): void {
   const icon = root.querySelector<HTMLElement>("[data-dodge-icon]");
+  const cooldown = root.querySelector<HTMLElement>("[data-dodge-cooldown]");
 
   if (!icon) {
     return;
   }
 
-  icon.textContent = DODGE_ICONS[state.player.dodge.type];
+  const button = getDodgeSkillButtonState(state);
+  icon.textContent = DODGE_ICONS[button.iconLabel];
+  root.querySelector<HTMLElement>(".joystick-dodge")?.classList.toggle("joystick-dodge-cooling", !button.ready);
+
+  if (cooldown) {
+    cooldown.textContent = button.cooldownText;
+  }
 }

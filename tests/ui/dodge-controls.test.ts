@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createRunState } from "../../src/game/state";
-import { getDodgeHudState } from "../../src/ui/dodge";
+import { getDodgeHudState, getDodgeSkillButtonState } from "../../src/ui/dodge";
 import { getUiText } from "../../src/ui/locale";
 
 describe("dodge controls", () => {
@@ -23,5 +23,10 @@ describe("dodge controls", () => {
     expect(cooling.state).toBe("冷却");
     expect(cooling.cooldownText).toBe("0.9s");
     expect(cooling.progressPercent).toBeGreaterThan(0);
+
+    const button = getDodgeSkillButtonState(state);
+    expect(button.iconLabel).toBe("roll");
+    expect(button.cooldownText).toBe("0.9s");
+    expect(button.ready).toBe(false);
   });
 });

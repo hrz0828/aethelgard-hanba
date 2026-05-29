@@ -38,6 +38,7 @@ export interface UiText {
   resultShardsTotalLabel: string;
   resultUnlockedCharactersLabel: string;
   restartButton: string;
+  mainMenuButton: string;
   runStatusAria: string;
   timeLabel: string;
   levelLabel: string;
@@ -133,6 +134,7 @@ const ZH_TEXT: UiText = {
   resultShardsTotalLabel: "总计",
   resultUnlockedCharactersLabel: "已解锁角色",
   restartButton: "再来一局",
+  mainMenuButton: "返回首页",
   runStatusAria: "对局状态",
   timeLabel: "时间",
   levelLabel: "等级",
@@ -243,6 +245,7 @@ const EN_TEXT: UiText = {
   resultShardsTotalLabel: "Total shards",
   resultUnlockedCharactersLabel: "Unlocked characters",
   restartButton: "Run Again",
+  mainMenuButton: "Main Menu",
   runStatusAria: "Run status",
   timeLabel: "Time",
   levelLabel: "Level",

@@ -48,6 +48,7 @@ const expectedEventV1Assets = [
 ];
 
 const expectedMapV1Assets = ["assets/generated/map-v1/aethelgard-hanba-city.png"];
+const expectedUiAssets = ["assets/generated/ui/dodge-roll-icon.png"];
 
 function readPngSize(path: string): { width: number; height: number } {
   const buffer = readFileSync(path);
@@ -150,6 +151,17 @@ describe("generated 2D asset samples", () => {
       const size = readPngSize(path);
       expect(size.width).toBeLessThanOrEqual(1536);
       expect(size.height).toBeLessThanOrEqual(1536);
+      expect(readPngColorType(path)).toBe(6);
+    }
+  });
+
+  it("creates standalone UI skill icons", () => {
+    for (const asset of expectedUiAssets) {
+      const path = join(root, asset);
+      expect(existsSync(path), asset).toBe(true);
+      const size = readPngSize(path);
+      expect(size.width).toBe(96);
+      expect(size.height).toBe(96);
       expect(readPngColorType(path)).toBe(6);
     }
   });

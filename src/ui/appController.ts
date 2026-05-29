@@ -160,9 +160,14 @@ export class GameUiController {
     this.currentResult = result;
     this.resetGameplayUi();
     this.clearContent();
-    showResult(this.uiContent, this.language, result, () => {
-      this.game.registry.set(SELECTED_CHARACTER_KEY, this.metaSave.selectedCharacterId);
-      this.game.scene.start("GameScene");
+    showResult(this.uiContent, this.language, result, {
+      onRestart: () => {
+        this.game.registry.set(SELECTED_CHARACTER_KEY, this.metaSave.selectedCharacterId);
+        this.game.scene.start("GameScene");
+      },
+      onMainMenu: () => {
+        this.game.scene.start("MenuScene");
+      }
     });
   }
 

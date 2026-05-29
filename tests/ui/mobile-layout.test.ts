@@ -27,6 +27,15 @@ describe("mobile layout", () => {
   it("uses a standalone dodge skill icon button outside the movement pad", () => {
     expect(joystick).toContain("joystick-dodge-icon");
     expect(joystick).toContain("data-dodge-icon");
+    expect(joystick).toContain("data-dodge-cooldown");
     expect(joystick).toContain("renderJoystickDodgeIcon");
+    expect(styles).toContain("dodge-roll-icon.png");
+    expect(styles).toContain(".joystick-dodge-cooldown");
+  });
+
+  it("keeps the mobile home screen compact and scrollable", () => {
+    expect(styles).toContain("overflow-y: auto");
+    expect(styles).toContain("max-height: min(48vh, 420px)");
+    expect(styles).toContain("min-height: 108px");
   });
 });

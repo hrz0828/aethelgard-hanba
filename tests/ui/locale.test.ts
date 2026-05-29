@@ -9,6 +9,8 @@ describe("ui locale", () => {
     expect(getUiText("en").startButton).toBe("Start Run");
     expect(getUiText("zh").upgradeTitle).toBe("选择一个强化");
     expect(getUiText("en").upgradeTitle).toBe("Choose an Upgrade");
+    expect(getUiText("zh").mainMenuButton).toBe("返回首页");
+    expect(getUiText("en").mainMenuButton).toBe("Main Menu");
   });
 
   it("returns localized upgrade text", () => {
